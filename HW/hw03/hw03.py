@@ -26,6 +26,13 @@ def num_eights(n):
     """
     "*** YOUR CODE HERE ***"
 
+    if n == 8:
+        return 1
+    elif n < 10:
+        return 0
+    else:
+        return num_eights(n//10) + num_eights(n%10)
+
 
 def digit_distance(n):
     """Determines the digit distance of n.
@@ -47,6 +54,11 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+
+    if n < 10:
+        return 0
+    else:
+        return digit_distance(n//10) + abs(n%10-n//10%10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -71,6 +83,29 @@ def interleaved_sum(n, odd_func, even_func):
     True
     """
     "*** YOUR CODE HERE ***"
+
+    ## Misunderstanding the hint, but it works
+    # def helper_function_odd(k):
+    #     if k > n:
+    #         return 0
+    #     else:
+    #         return helper_function_odd(k+2) + odd_func(k)
+    # def helper_function_even(k):
+    #     if k > n:
+    #         return 0
+    #     else:
+    #         return helper_function_even(k+2) + even_func(k)
+    # return helper_function_odd(1) + helper_function_even(2)
+
+    def helper_function(k, kisEven):
+        if k > n:
+            return 0
+        elif kisEven:
+            return helper_function(k+1, False) + even_func(k)
+        else :
+            return helper_function(k+1, True) + odd_func(k)
+        
+    return helper_function(1, False)
 
 
 def next_smaller_dollar(bill):
@@ -107,6 +142,16 @@ def count_dollars(total):
     True
     """
     "*** YOUR CODE HERE ***"
+
+    def f(amount, max_bill):
+        if amount < 0:
+            return 0
+        elif max_bill == 1 or amount == 0:
+            return 1
+        else:
+            return f(amount, next_smaller_dollar(max_bill)) + f(amount - max_bill, max_bill)
+
+    return f(total, 100)
 
 
 def next_larger_dollar(bill):
