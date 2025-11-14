@@ -97,6 +97,7 @@ def interleaved_sum(n, odd_func, even_func):
     #         return helper_function_even(k+2) + even_func(k)
     # return helper_function_odd(1) + helper_function_even(2)
 
+    # Google Gemini 2.5 Pro tell me I misunderstand the hint, and tell me to use a boolean flag :(
     def helper_function(k, kisEven):
         if k > n:
             return 0
@@ -189,6 +190,16 @@ def count_dollars_upward(total):
     """
     "*** YOUR CODE HERE ***"
 
+    def f(amount, min_bill):
+        if amount == min_bill:
+            return 1
+        elif min_bill == None or amount < min_bill:
+            return 0
+        else:
+            return f(amount - min_bill, min_bill) + f(amount, next_larger_dollar(min_bill))
+        
+    return f(total, 1)
+
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
@@ -224,6 +235,15 @@ def move_stack(n, start, end):
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
 
+    if n == 0:
+        return
+    
+    medium = 1+2+3-start-end
+
+    move_stack(n-1, start, medium)
+    print_move(start, end)
+    move_stack(n-1, medium, end)
+
 
 from operator import sub, mul
 
@@ -238,5 +258,4 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
-
+    return lambda n: (lambda f, n: 1 if n == 1 else mul(n, f(f,n-1)))(lambda f, n: 1 if n == 1 else mul(n, f(f,n-1)), n) # By asking the hint from Google Gemini 2.5 Pro :(
