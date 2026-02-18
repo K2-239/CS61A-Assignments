@@ -145,9 +145,10 @@ def wpm(typed, elapsed):
     assert elapsed > 0, "Elapsed time must be positive"
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
-    # END PROBLEM 4
 
     return len(typed) * 60 / (5.0 * elapsed)
+
+    # END PROBLEM 4
 
 
 ################
@@ -208,6 +209,29 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+
+    answer = typed_word
+    curr_min = limit + 1
+    for word in word_list:
+        if typed_word == word :
+            return typed_word
+        diff = diff_function(typed_word, word, limit)
+        if diff < curr_min and diff <= limit:
+            answer = word
+            curr_min = diff
+        print("DEBUG:",answer)
+        print("DEBUG:",diff)
+
+    return answer
+
+    ## There is Refactored Code using the Hint from Gemini
+    # if typed_word in word_list:
+    #     return typed_word
+    # best_word = min(word_list, key=lambda w: diff_function(typed_word, w, limit))
+    # if diff_function(typed_word, best_word, limit) <= limit:
+    #     return best_word
+    # return typed_word
+
     # END PROBLEM 5
 
 
@@ -234,7 +258,16 @@ def furry_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    #assert False, 'Remove this line'
+
+    if limit < 0 or (typed == '' and source == ''):
+        return 0
+    
+    if (typed != '' and source != '') and typed[0] == source[0] :
+        return furry_fixes(typed[1:], source[1:], limit)
+    else :
+        return 1 + furry_fixes(typed[1:], source[1:], limit - 1)
+
     # END PROBLEM 6
 
 
@@ -255,22 +288,31 @@ def minimum_mewtations(typed, source, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ___________: # Base cases should go here, you may add more base cases as needed.
+    #assert False, 'Remove this line'
+    if limit < 0 or typed == source: # Base cases should go here, you may add more base cases as needed.
         # BEGIN
         "*** YOUR CODE HERE ***"
+        # print("DEBUG :", "Case 0: typed = ", typed, "source = ", source)
+        return 0
         # END
     # Recursive cases should go below here
-    if ___________: # Feel free to remove or add additional cases
+    if (typed != '' and source != '') and typed[0] == source[0] : # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
+        # print("DEBUG :", "Case 1: typed = ", typed, "source = ", source)
+        return minimum_mewtations(typed[1:], source[1:], limit)
         # END
+    elif typed == '' or source == '' :
+        # print("DEBUG :", "Case 2: typed = ", typed, "source = ", source)
+        return len(typed) + len(source)
     else:
-        add = ... # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = source[0] + typed # Fill in these lines
+        remove = typed[1:]
+        substitute = source[0] + typed[1:]
         # BEGIN
         "*** YOUR CODE HERE ***"
+        # print("DEBUG :", "Case 3: typed = ", typed, "source = ", source)
+        return 1 + min(minimum_mewtations(add, source, limit - 1), minimum_mewtations(remove, source, limit - 1), minimum_mewtations(substitute, source, limit - 1))
         # END
 
 
