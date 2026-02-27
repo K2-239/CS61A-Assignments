@@ -158,6 +158,12 @@ def sprout_leaves(t, leaves):
     """
     "*** YOUR CODE HERE ***"
 
+    if is_leaf(t):
+        newt = tree(label(t), [tree(l) for l in leaves])
+    else:
+        newt = tree(label(t), [sprout_leaves(b, leaves) for b in branches(t)])
+    return newt
+
 def partial_reverse(s, start):
     """Reverse part of a list in-place, starting with start up to the end of
     the list.
@@ -172,6 +178,12 @@ def partial_reverse(s, start):
     """
     "*** YOUR CODE HERE ***"
 
+    end = len(s)
+    middle = (start + end) // 2
+    print("DEBUG: start = ", start, ", middle = ", middle, ", end = ", end)
+    for i in range(middle - start):
+        print("DEBUG: i = ", i)
+        s[start+i], s[end-1-i] = s[end-1-i], s[start+i]
 
 
 # Tree Data Abstraction
