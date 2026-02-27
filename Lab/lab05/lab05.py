@@ -28,6 +28,15 @@ def insert_items(s, before, after):
     """
     "*** YOUR CODE HERE ***"
 
+    i = 0
+    while i < len(s):
+        if s[i] == before:
+            i = i + 1
+            s.insert(i, after)
+        i = i + 1
+
+    return s
+
 
 def group_by(s, fn):
     """Return a dictionary of lists that together contain the elements of s.
@@ -40,12 +49,12 @@ def group_by(s, fn):
     {9: [-3, 3], 4: [-2, 2], 1: [-1, 1], 0: [0]}
     """
     grouped = {}
-    for ____ in ____:
-        key = ____
+    for e in s:
+        key = fn(e)
         if key in grouped:
-            ____
+            grouped[key].append(e)
         else:
-            grouped[key] = ____
+            grouped[key] = [e]
     return grouped
 
 
@@ -72,6 +81,12 @@ def count_occurrences(t, n, x):
     """
     "*** YOUR CODE HERE ***"
 
+    count = 0
+    for _ in range(n):
+        if next(t) == x:
+            count = count + 1
+
+    return count
 
 def repeated(t, k):
     """Return the first value in iterator t that appears k times in a row,
@@ -95,6 +110,18 @@ def repeated(t, k):
     assert k > 1
     "*** YOUR CODE HERE ***"
 
+    before = next(t)
+    count = 1
+
+    for now in t:
+        if before == now:
+            count = count + 1
+            if count == k:
+                return now
+        else:
+            before = now
+            count = 1
+        print("DEBUG: now = ", now, ", before = ", before, ", count = ", count)
 
 def sprout_leaves(t, leaves):
     """Sprout new leaves containing the labels in leaves at each leaf of
@@ -130,7 +157,6 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
-
 
 def partial_reverse(s, start):
     """Reverse part of a list in-place, starting with start up to the end of
