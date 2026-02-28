@@ -178,6 +178,16 @@ def memo_diff(diff_function):
     def memoized(typed, source, limit):
         # BEGIN PROBLEM EC
         "*** YOUR CODE HERE ***"
+
+        if (typed, source) in cache :
+            (cached_value, cached_limit) = cache[(typed, source)]
+            if limit <= cached_limit :
+                return cached_value
+        
+        value = diff_function(typed, source, limit)
+        cache[(typed, source)] = (value, limit)
+        return value
+
         # END PROBLEM EC
 
     return memoized
@@ -188,6 +198,7 @@ def memo_diff(diff_function):
 ###########
 
 
+@memo
 def autocorrect(typed_word, word_list, diff_function, limit):
     """Returns the element of WORD_LIST that has the smallest difference
     from TYPED_WORD based on DIFF_FUNCTION. If multiple words are tied for the smallest difference,
@@ -271,6 +282,7 @@ def furry_fixes(typed, source, limit):
     # END PROBLEM 6
 
 
+@memo_diff
 def minimum_mewtations(typed, source, limit):
     """A diff function for autocorrect that computes the edit distance from TYPED to SOURCE.
     This function takes in a string TYPED, a string SOURCE, and a number LIMIT.
@@ -289,30 +301,28 @@ def minimum_mewtations(typed, source, limit):
     3
     """
     #assert False, 'Remove this line'
-    if limit < 0 or typed == source: # Base cases should go here, you may add more base cases as needed.
+    
+    while (typed != '' and source != '') and typed[0] == source[0] :
+        typed, source = typed[1:], source[1:]
+    
+    if typed == '' or source == '': # Base cases should go here, you may add more base cases as needed.
         # BEGIN
         "*** YOUR CODE HERE ***"
-        # print("DEBUG :", "Case 0: typed = ", typed, "source = ", source)
-        return 0
+        return len(typed) + len(source)
         # END
     # Recursive cases should go below here
-    if (typed != '' and source != '') and typed[0] == source[0] : # Feel free to remove or add additional cases
+    if abs(len(typed) - len(source)) > limit: # Feel free to remove or add additional cases
         # BEGIN
         "*** YOUR CODE HERE ***"
-        # print("DEBUG :", "Case 1: typed = ", typed, "source = ", source)
-        return minimum_mewtations(typed[1:], source[1:], limit)
+        return limit + 1
         # END
-    elif typed == '' or source == '' :
-        # print("DEBUG :", "Case 2: typed = ", typed, "source = ", source)
-        return len(typed) + len(source)
     else:
         add = source[0] + typed # Fill in these lines
         remove = typed[1:]
         substitute = source[0] + typed[1:]
         # BEGIN
         "*** YOUR CODE HERE ***"
-        # print("DEBUG :", "Case 3: typed = ", typed, "source = ", source)
-        return 1 + min(minimum_mewtations(add, source, limit - 1), minimum_mewtations(remove, source, limit - 1), minimum_mewtations(substitute, source, limit - 1))
+        return 1 + min(minimum_mewtations(typed, source[1:], limit - 1), minimum_mewtations(remove, source, limit - 1), minimum_mewtations(typed[1:], source[1:], limit - 1))
         # END
 
 
