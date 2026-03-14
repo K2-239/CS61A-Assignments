@@ -40,6 +40,11 @@ class Account:
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
         "*** YOUR CODE HERE ***"
+        balance = self.balance
+        count = 0
+        while balance < amount:
+            balance, count = balance + balance*self.interest, count + 1
+        return count
 
 
 class FreeChecking(Account):
@@ -71,6 +76,22 @@ class FreeChecking(Account):
 
     "*** YOUR CODE HERE ***"
 
+    def __init__(self, account_holder):
+        super().__init__(account_holder)
+        self.free_withdrawals = FreeChecking.free_withdrawals
+        self.withdraw_fee = 0
+    
+    def withdraw(self, amount):
+        if self.free_withdrawals > 0:
+            self.free_withdrawals = self.free_withdrawals - 1
+        else:
+            self.withdraw_fee = FreeChecking.withdraw_fee
+        if amount > self.balance - self.withdraw_fee:
+            return "Insufficient funds"
+        if amount > self.max_withdrawal:
+            return "Can't withdraw that amount"
+        self.balance = self.balance - amount - self.withdraw_fee
+        return self.balance
 
 def without(s, i):
     """Return a new linked list like s but without the element at index i.
@@ -86,6 +107,13 @@ def without(s, i):
     True
     """
     "*** YOUR CODE HERE ***"
+    if s == Link.empty:
+        return Link.empty
+    elif i == 0:
+        return Link(s.rest.first, s.rest.rest)
+    else:
+        return Link(s.first, without(s.rest, i-1))
+    
 
 
 def duplicate_link(s, val):
@@ -105,7 +133,12 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
-
+    if s != Link.empty:
+        if s.first == val:
+            duplicate_link(s.rest, val)
+            s.rest = Link(val, s.rest)
+        elif s.rest != Link.empty:
+            duplicate_link(s.rest, val)
 
 class Link:
     """A linked list.
