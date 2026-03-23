@@ -27,12 +27,19 @@ class Frame:
         """Define Scheme SYMBOL to have VALUE."""
         # BEGIN PROBLEM 1
         "*** YOUR CODE HERE ***"
+        self.bindings[symbol] = value
         # END PROBLEM 1
 
     def lookup(self, symbol):
         """Return the value bound to SYMBOL. Errors if SYMBOL is not found."""
         # BEGIN PROBLEM 1
         "*** YOUR CODE HERE ***"
+        current_frame = self
+        while current_frame is not None:
+            if symbol in current_frame.bindings:
+                return current_frame.bindings[symbol]
+            else:
+                current_frame = current_frame.parent
         # END PROBLEM 1
         raise SchemeError('unknown identifier: {0}'.format(symbol))
 

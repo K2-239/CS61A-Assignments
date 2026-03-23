@@ -34,6 +34,18 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     else:
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        operator = scheme_eval(first, env)
+        # Actually, we can evaluate the operands by only one line:
+        args_slist = rest.map(lambda x: scheme_eval(x, env))
+        # There is my original code which has a problem. Thanks Gemini
+        # args_slist = rest.map(lambda x: x)
+        # curr_arg = args_slist
+        # while curr_arg is not nil:
+        #     # The problem: Every element of the operand list should be eval
+        #     if isinstance(curr_arg.first, Pair):
+        #         curr_arg.first = scheme_eval(curr_arg.first, env)
+        #     curr_arg = curr_arg.rest
+        return scheme_apply(operator, args_slist, env)
         # END PROBLEM 3
 
 def scheme_apply(procedure, args, env):
@@ -45,10 +57,19 @@ def scheme_apply(procedure, args, env):
     if isinstance(procedure, BuiltinProcedure):
         # BEGIN PROBLEM 2
         "*** YOUR CODE HERE ***"
+        curr_arg = args
+        args_list = []
+        while curr_arg is not nil:
+            args_list.append(curr_arg.first)
+            curr_arg = curr_arg.rest
         # END PROBLEM 2
         try:
             # BEGIN PROBLEM 2
             "*** YOUR CODE HERE ***"
+            if procedure.need_env:
+                return procedure.py_func(*args_list, env)
+            else:
+                return procedure.py_func(*args_list)
             # END PROBLEM 2
         except TypeError as err:
             raise SchemeError('incorrect number of arguments: {0}'.format(procedure))
