@@ -32,7 +32,7 @@
       (cons (car s2) (cons (car s1) (merge ordered? (cdr s1) (cdr s2)))))
     )
   )
- )
+)
   ; END PROBLEM 16
 
 ;; Optional Problem 2
@@ -50,12 +50,12 @@
 (define (let-to-lambda expr)
   (cond ((atom? expr)
          ; BEGIN OPTIONAL PROBLEM 2
-         'replace-this-line
+         expr
          ; END OPTIONAL PROBLEM 2
          )
         ((quoted? expr)
          ; BEGIN OPTIONAL PROBLEM 2
-         'replace-this-line
+         expr
          ; END OPTIONAL PROBLEM 2
          )
         ((or (lambda? expr)
@@ -64,23 +64,29 @@
                (params (cadr expr))
                (body   (cddr expr)))
            ; BEGIN OPTIONAL PROBLEM 2
-           'replace-this-line
+           (define (pairshaslet? pairs)
+            (if (null? pairs) #f (or (let? pairs) (pairshaslet? (cdr pairs))))
+           )
+           (if (pairshaslet? params) (cons form (cons params body)) (cons form (cons params (let-to-lambda body))))
            ; END OPTIONAL PROBLEM 2
            ))
         ((let? expr)
          (let ((values (cadr expr))
                (body   (cddr expr)))
            ; BEGIN OPTIONAL PROBLEM 2
-           'replace-this-line
+           (define param (car (zip values)))
+           (define values (cadr (zip values)))
+           (cons `(lambda ,param ,(let-to-lambda (car body))) (let-to-lambda values))
            ; END OPTIONAL PROBLEM 2
            ))
         (else
          ; BEGIN OPTIONAL PROBLEM 2
-         'replace-this-line
+         (cons (let-to-lambda (car expr)) (let-to-lambda (cdr expr)))
          ; END OPTIONAL PROBLEM 2
          )))
 
 ; Some utility functions that you may find useful to implement for let-to-lambda
 
 (define (zip pairs)
-  'replace-this-line)
+  `(,(map (lambda (pair) (car pair)) pairs) ,(map (lambda (pair) (cadr pair)) pairs))
+)
